@@ -1,9 +1,10 @@
 'use client';
-
 import Image from "next/image";
 import {useEffect, useState} from "react";
+import { useSearchParams } from 'next/navigation'
 
 type FeedMessage = {
+    userId: string,
     messageId: string,
     message: string
 }
@@ -29,7 +30,9 @@ function useWebSocket(url: string) {
 }
 
 export default function Home() {
-    const messages = useWebSocket('http://localhost:8080/ws/feed/lbarnes');
+
+    const searchParams = useSearchParams()
+    const messages = useWebSocket(searchParams.get('url') || '');
 
   console.log('Messages', messages)
 
@@ -41,7 +44,7 @@ export default function Home() {
 
           {messages.map(message => {
               return <div key={message.messageId}>
-                  {message.message}
+                  {message.userId} - {message.message}
               </div>
           })}
       </main>
